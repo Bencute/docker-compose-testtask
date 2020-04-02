@@ -1,5 +1,5 @@
 # docker-compose-testtask
-## Настройка и запуск ##
+## Настройка и запуск
 1. Склонировать репозиторий
     ```
     git clone https://github.com/Bencute/docker-compose-testtask.git
@@ -10,3 +10,6 @@
     ```
 3. Дождаться сборки и запуска
 4. Перейти в браузере по ссылке http://localhost/
+
+## Примечание
+1. Необходим доступ в интернет для загрузки CDN Bootstrap
