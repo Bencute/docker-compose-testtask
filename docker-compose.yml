@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  apache:
+    image: httpd:2.4
+    ports:
+      - 80:80
+    volumes:
+      - pf:/usr/local/apache2/htdocs
+      - ./volumes/src/frontend/web/data:/usr/local/apache2/htdocs/frontend/web/data
+      - ./volumes/httpd/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+      - ./volumes/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php
+
+  mariadb:
+    image: mariadb
+    volumes:
+      - ./volumes/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./volumes/mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mariadb:db
+    ports:
+      - 8080:80
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - mariadb
+
+  php:
+    build:
+      ./docker/php
+    ports:
+      - 9000:9000
+    volumes:
+      - ./volumes/src/frontend/web/data:/usr/local/apache2/htdocs/frontend/web/data
+      - pf:/usr/local/apache2/htdocs
+    depends_on:
+      - mariadb
+      
+volumes:
+  pf:
